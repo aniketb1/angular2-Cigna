@@ -1,14 +1,15 @@
 import {Component, ElementRef} from 'angular2/core';
+import {NameListService} from '../../services/nameList.service';
 
 @Component({
     selector: 'countries',
     host: {
         '(document:click)': 'handleClick($event)',
-    },
+    },    
     template: `
         <div class="container" >
             <div class="input-field col s12">
-            <label for="country">Select Country</label>
+            <label for="country">Select a Country</label>
               <input id="country" type="text" class="validate filter-input" [(ngModel)]=query (keyup)=filter($event)  (blur)=handleBlur()>
               <button (click)="clicked()">Search</button>
             </div>
@@ -20,26 +21,28 @@ import {Component, ElementRef} from 'angular2/core';
                 </ul>
             </div>
         </div>
-    	`
+    	`,
+        providers: [NameListService]
 })
 
 export class CountriesComponent {
-    public query = '';
-    public countries = ["Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia & Herzegovina",
-        "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Georgia",
-        "Germany", "Greece", "Hungary", "Iceland","India", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein",
-        "Lithuania", "Luxembourg", "Macedonia", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
-        "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia",
-        "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Vatican City"];
+
+    public query = '';    
     public filteredList = [];
     public elementRef;
+    public countries : String[];
+    countriesList: String[];
     selectedIdx: number;
+    test: String;
 
-    constructor(myElement: ElementRef) {
-        this.elementRef = myElement;
-        this.selectedIdx = -1;
+    constructor(private _listService : NameListService){
+      
+    }
+    ngOnInit(){
+        this.countries = this._listService.getNames();
     }
 
+ 
     filter(event: any) {
         if (this.query !== "") {
             this.filteredList = this.countries.filter(function (el) {

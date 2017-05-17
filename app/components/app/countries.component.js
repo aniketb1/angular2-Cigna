@@ -1,4 +1,4 @@
-System.register(['angular2/core'], function(exports_1, context_1) {
+System.register(['angular2/core', '../../services/nameList.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,27 +10,26 @@ System.register(['angular2/core'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, nameList_service_1;
     var CountriesComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (nameList_service_1_1) {
+                nameList_service_1 = nameList_service_1_1;
             }],
         execute: function() {
             CountriesComponent = (function () {
-                function CountriesComponent(myElement) {
+                function CountriesComponent(_listService) {
+                    this._listService = _listService;
                     this.query = '';
-                    this.countries = ["Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia & Herzegovina",
-                        "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Georgia",
-                        "Germany", "Greece", "Hungary", "Iceland", "India", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein",
-                        "Lithuania", "Luxembourg", "Macedonia", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
-                        "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia",
-                        "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Vatican City"];
                     this.filteredList = [];
-                    this.elementRef = myElement;
-                    this.selectedIdx = -1;
                 }
+                CountriesComponent.prototype.ngOnInit = function () {
+                    this.countries = this._listService.getNames();
+                };
                 CountriesComponent.prototype.filter = function (event) {
                     if (this.query !== "") {
                         this.filteredList = this.countries.filter(function (el) {
@@ -79,9 +78,10 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                         host: {
                             '(document:click)': 'handleClick($event)',
                         },
-                        template: "\n        <div class=\"container\" >\n            <div class=\"input-field col s12\">\n            <label for=\"country\">Select Country</label>\n              <input id=\"country\" type=\"text\" class=\"validate filter-input\" [(ngModel)]=query (keyup)=filter($event)  (blur)=handleBlur()>\n              <button (click)=\"clicked()\">Search</button>\n            </div>\n            <div class=\"suggestions\" *ngIf=\"filteredList.length > 0\">\n                <ul *ngFor=\"#item of filteredList;#idx = index\" >\n                    <li [class.complete-selected]=\"idx == selectedIdx\">\n                        <a (click)=\"select(item)\">{{item}}</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n    \t"
+                        template: "\n        <div class=\"container\" >\n            <div class=\"input-field col s12\">\n            <label for=\"country\">Select a Country</label>\n              <input id=\"country\" type=\"text\" class=\"validate filter-input\" [(ngModel)]=query (keyup)=filter($event)  (blur)=handleBlur()>\n              <button (click)=\"clicked()\">Search</button>\n            </div>\n            <div class=\"suggestions\" *ngIf=\"filteredList.length > 0\">\n                <ul *ngFor=\"#item of filteredList;#idx = index\" >\n                    <li [class.complete-selected]=\"idx == selectedIdx\">\n                        <a (click)=\"select(item)\">{{item}}</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n    \t",
+                        providers: [nameList_service_1.NameListService]
                     }), 
-                    __metadata('design:paramtypes', [core_1.ElementRef])
+                    __metadata('design:paramtypes', [nameList_service_1.NameListService])
                 ], CountriesComponent);
                 return CountriesComponent;
             }());
